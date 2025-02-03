@@ -1,11 +1,10 @@
 import type { FormUsuario } from '@/interfaces/FormUsuarioInterface'
 import type { InputProps } from '@/interfaces/InputPropsInterface'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
 
 export const useFormStore = defineStore('formStore', {
   state: () => ({
-    formValues: ref<FormUsuario>({
+    formValues: {
       nombre: null,
       primerApellido: null,
       segundoApellido: null,
@@ -18,8 +17,8 @@ export const useFormStore = defineStore('formStore', {
       estado: null,
       delegacion: null,
       colonia: null,
-    }),
-    formErrors: ref<FormUsuario>({
+    } as FormUsuario,
+    formErrors: {
       nombre: null,
       primerApellido: null,
       segundoApellido: null,
@@ -32,7 +31,8 @@ export const useFormStore = defineStore('formStore', {
       estado: null,
       delegacion: null,
       colonia: null,
-    }),
+    } as FormUsuario,
+    validateForm: false,
   }),
 
   actions: {
@@ -69,10 +69,20 @@ export const useFormStore = defineStore('formStore', {
 
     resetForm() {
       // Restablece valores y errores
-      Object.keys(this.formValues).forEach((key) => {
-        this.formValues[key as keyof FormUsuario] = null
-      })
-
+      this.formValues = {
+        nombre: null,
+        primerApellido: null,
+        segundoApellido: null,
+        curp: null,
+        rfc: null,
+        codigoPostal: null,
+        calle: null,
+        numeroExterior: null,
+        numeroInterior: null,
+        estado: null,
+        delegacion: null,
+        colonia: null,
+      }
       this.formErrors = {
         nombre: null,
         primerApellido: null,

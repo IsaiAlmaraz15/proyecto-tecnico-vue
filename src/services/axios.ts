@@ -9,8 +9,7 @@ const axiosInstanceGET: AxiosInstance = axios.create({
 })
 
 const axiosInstancePOST: AxiosInstance = axios.create({
-  baseURL: 'https://api.dominio2.com',
-  timeout: 5000,
+  baseURL: 'http://httpbin.org',
   headers: {
     'Content-Type': 'application/json',
   },

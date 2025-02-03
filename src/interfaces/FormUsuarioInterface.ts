@@ -1,4 +1,4 @@
-export interface InfoUsuario {
+export interface infoUsuario {
   nombre: string | null
   primerApellido: string | null
   segundoApellido: string | null
@@ -6,7 +6,7 @@ export interface InfoUsuario {
   rfc: string | null
 }
 
-export interface DomicilioUsuario {
+export interface Domicilio {
   codigoPostal: string | null
   calle: string | null
   numeroExterior: string | null
@@ -16,4 +16,4 @@ export interface DomicilioUsuario {
   colonia: string | null
 }
 
-export interface FormUsuario extends InfoUsuario, DomicilioUsuario {}
+export interface FormUsuario extends infoUsuario, Domicilio {}

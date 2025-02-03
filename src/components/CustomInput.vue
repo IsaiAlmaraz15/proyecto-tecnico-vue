@@ -7,7 +7,7 @@
       :maxlength="limite"
       :name="name"
       :placeholder="label"
-      @blur="handleBlur"
+      @blur="$emit('blur')"
     />
     <label :for="name">
       {{ label }}
@@ -19,11 +19,18 @@
 </template>
 
 <script lang="ts">
+import type { FormUsuario } from '@/interfaces/FormUsuarioInterface'
+import { useFormStore } from '@/store/FormStore'
 import { useField } from 'vee-validate'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'CustomInput',
+  data() {
+    return {
+      formStore: useFormStore(),
+    }
+  },
   props: {
     label: { type: String, required: true },
     name: { type: String, required: true },
@@ -43,19 +50,22 @@ export default defineComponent({
       curp: 'curp',
     }
 
-    // Construimos las reglas dinámicamente:
     // Si el campo es requerido se le antepone la regla "required" separada por |.
     const rules = `${props.esRequerido ? 'required|' : ''}${validationRuleMap[props.tipo] || 'text'}`
 
-    // Usamos useField para manejar el estado del campo y su validación.
-    // Se retorna un objeto reactivo con "value", "errorMessage" y "handleBlur".
-    const { value: inputValue, errorMessage, handleBlur } = useField(props.name, rules)
+    // useField para manejar el estado del campo y su validación.
+    const { value: inputValue, errorMessage } = useField(props.name, rules)
 
     return {
-      inputValue, // Valor del campo
-      errorMessage, // Mensaje de error reactivo
-      handleBlur, // Función que se ejecuta al perder el foco
+      inputValue,
+      errorMessage,
     }
+  },
+  watch: {
+    // Emitimos el evento blur cuando el campo pierde el foco
+    inputValue(newValue) {
+      this.formStore.updateFieldValue(this.name as keyof FormUsuario, newValue)
+    },
   },
 })
 </script>
