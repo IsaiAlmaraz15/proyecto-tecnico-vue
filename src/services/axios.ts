@@ -1,12 +1,19 @@
 import axios, { type AxiosInstance } from 'axios'
 
-// Crear una instancia básica de Axios
-const axiosInstance: AxiosInstance = axios.create({
-  baseURL: '/', // Base URL por defecto (puedes cambiarla si es necesario)
-  timeout: 5000, // Tiempo límite para las solicitudes
+const axiosInstanceGET: AxiosInstance = axios.create({
+  baseURL: 'https://jsonplaceholder.typicode.com/users',
+  timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
   },
 })
 
-export default axiosInstance
+const axiosInstancePOST: AxiosInstance = axios.create({
+  baseURL: 'https://api.dominio2.com',
+  timeout: 5000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+export { axiosInstanceGET, axiosInstancePOST }

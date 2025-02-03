@@ -22,7 +22,7 @@
 import type { FormUsuario } from '@/interfaces/FormUsuarioInterface'
 import { useFormStore } from '@/store/FormStore'
 import { useField } from 'vee-validate'
-import { computed, defineComponent, watch } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
 
 export default defineComponent({
   name: 'CustomInput',
@@ -34,11 +34,15 @@ export default defineComponent({
     limite: { type: Number, default: Infinity },
   },
   emits: ['blur'],
-  setup(props) {
-    const store = useFormStore()
-
+  data() {
+    return {
+      inputValue: ref(''),
+      errorMessage: ref(''),
+    }
+  },
+  computed: {
     // Determinar las reglas de validación dinámicamente
-    const selectedValidationRules = computed(() => {
+    selectedValidationRules() {
       const validationRuleMap: Record<string, string> = {
         text: 'text',
         email: 'email',
@@ -47,28 +51,38 @@ export default defineComponent({
         rfc: 'rfc',
         curp: 'curp',
       }
-      return `${props.esRequerido ? 'required|' : ''}${validationRuleMap[props.tipo] || 'text'}`
-    })
-
-    // Usar vee-validate para la validación del campo
-    const { value: inputValue, errorMessage } = useField(props.name, selectedValidationRules)
-
+      return `${this.esRequerido ? 'required|' : ''}${validationRuleMap[this.tipo] || 'text'}`
+    },
+  },
+  watch: {
     // Observar cambios en el valor del campo
-    watch(inputValue, (newValue) => {
-      store.updateFieldValue(props.name as keyof FormUsuario, newValue as string)
-    })
+    inputValue(newValue) {
+      const store = useFormStore()
 
+      store.updateFieldValue(this.name as keyof FormUsuario, newValue)
+    },
     // Observar cambios en el mensaje de error
-    watch(errorMessage, (newValue) => {
-      store.updateFieldError(props.name as keyof FormUsuario, newValue as string)
+    errorMessage(newValue) {
+      const store = useFormStore()
+      store.updateFieldError(this.name as keyof FormUsuario, newValue)
+    },
+  },
+  mounted() {
+    // Usar vee-validate para la validación del campo
+    const { value, errorMessage } = useField(this.name, this.selectedValidationRules)
+
+    // Asignar el valor a la data
+    this.inputValue = value.value as string
+    this.errorMessage = errorMessage.value as string
+
+    // Actualizar los datos reactivamente
+    watch(value, (newValue) => {
+      this.inputValue = newValue as string
     })
 
-    return {
-      inputValue,
-      errorMessage,
-    }
+    watch(errorMessage, (newValue) => {
+      this.errorMessage = newValue as string
+    })
   },
 })
 </script>
-
-<
