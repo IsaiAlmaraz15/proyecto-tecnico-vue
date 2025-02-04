@@ -40,15 +40,18 @@ export const useFormStore = defineStore('formStore', {
       // Actualiza el valor del campo
       this.formValues[name] = value
     },
-
     updateFieldError(name: keyof FormUsuario, error: string | null) {
       // Actualiza el error del campo o lo limpia si es null
-      if (error) {
-        this.formErrors[name] = error
-      } else {
-        delete this.formErrors[name]
-      }
+      this.formErrors[name] = error
     },
+    // updateFieldError(name: keyof FormUsuario, error: string | null) {
+    //   // Actualiza el error del campo o lo limpia si es null
+    //   if (error) {
+    //     this.formErrors[name] = error
+    //   } else {
+    //     delete this.formErrors[name]
+    //   }
+    // },
 
     validateForm(fieldsConfig: InputProps[]): boolean {
       let isValid = true

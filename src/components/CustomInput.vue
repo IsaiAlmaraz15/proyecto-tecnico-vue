@@ -66,6 +66,13 @@ export default defineComponent({
     inputValue(newValue) {
       this.formStore.updateFieldValue(this.name as keyof FormUsuario, newValue)
     },
+    // actualizamos el valor de los errores cuando existen en el store
+    formErrors: {
+      handler(newValue) {
+        this.errorMessage = newValue[this.name as keyof FormUsuario]
+      },
+      deep: true,
+    },
   },
 })
 </script>

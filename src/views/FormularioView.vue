@@ -162,7 +162,7 @@ export default {
   watch: {
     hasErrors(newValue) {
       console.log('hasErrors cambiado a:', newValue)
-      if (newValue) {
+      if (!newValue) {
         SweetAlert.fire({
           title: 'Exito!',
           text: 'Todos los datos son correctos.',
@@ -173,6 +173,9 @@ export default {
   },
   mounted() {
     this.verTabla = true
+    this.fieldsConfig.forEach((field) => {
+      this.validateField(field.name as keyof FormUsuario)
+    })
   },
 }
 </script>
