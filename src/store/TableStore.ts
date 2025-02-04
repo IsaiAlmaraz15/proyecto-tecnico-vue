@@ -7,9 +7,7 @@ export const useTableStore = defineStore('tableStore', {
   state: () => ({
     tableData: [] as TableResponseInterface[],
     errortableData: ref<string | null>(null),
-    tableFormEdit: ref<TableResponseInterface | null>(null),
-    tableFormEditError: ref<TableResponseInterface | null>(null),
-    userEdit: ref<TableResponseInterface | null>(null),
+    userEdit: {} as TableResponseInterface,
   }),
   getters: {
     getTableData(): TableResponseInterface[] {
@@ -41,6 +39,10 @@ export const useTableStore = defineStore('tableStore', {
     // Obtener usuario por ID
     getUserById(id: number): TableResponseInterface | null {
       return this.tableData.find((user) => user.id === id) || null
+    },
+    // Establecer usuario a editar
+    setUserEdit(user: TableResponseInterface) {
+      this.userEdit = { ...user }
     },
   },
 })

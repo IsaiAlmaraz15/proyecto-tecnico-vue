@@ -23,9 +23,20 @@
         </div>
       </div>
 
+      <!-- Tabla -->
       <div class="row" v-if="verTabla">
         <div class="col col-lg-12">
           <TablaUsuarios />
+        </div>
+      </div>
+
+      <!-- Mapa -->
+      <div v-if="users.length > 0" class="row">
+        <div class="col col-sm-12 col-md-12 col-lg-12 mt-3 mr-5">
+          <h1 class="display-6">Mapa de usuarios</h1>
+        </div>
+        <div class="col col-lg-12">
+          <MapComponent :users="users" />
         </div>
       </div>
     </div>
@@ -34,19 +45,22 @@
 
 <script lang="ts">
 import CustomInput from '@/components/CustomInput.vue'
+import MapComponent from '@/components/MapComponent.vue'
 import TablaUsuarios from '@/components/TablaUsuarios.vue'
 import type { FormUsuario } from '@/interfaces/FormUsuarioInterface'
 import type { InputProps } from '@/interfaces/InputPropsInterface'
 import { axiosInstancePOST } from '@/services/axios'
 import { useFormStore } from '@/store/FormStore'
+import { useTableStore } from '@/store/TableStore'
 import { formatSaveUser } from '@/utils/form-data-format'
 import SweetAlert from 'sweetalert2'
 
 export default {
-  components: { CustomInput, TablaUsuarios },
+  components: { CustomInput, TablaUsuarios, MapComponent },
   data() {
     return {
       formStore: useFormStore(),
+      tableStore: useTableStore(),
       fieldsConfig: [
         { name: 'nombre', tipo: 'text', label: 'Nombre(s)', esRequerido: true },
         { name: 'primerApellido', tipo: 'text', label: 'Primer Apellido', esRequerido: true },
@@ -95,6 +109,11 @@ export default {
     hasErrors() {
       return Object.values(this.formStore.formErrors).some((value) => value !== null)
     },
+
+    // obtener usuarios de la tabla
+    users() {
+      return this.tableStore.tableData
+    },
   },
 
   methods: {
@@ -142,7 +161,8 @@ export default {
 
   watch: {
     hasErrors(newValue) {
-      if (!newValue) {
+      console.log('hasErrors cambiado a:', newValue)
+      if (newValue) {
         SweetAlert.fire({
           title: 'Exito!',
           text: 'Todos los datos son correctos.',
